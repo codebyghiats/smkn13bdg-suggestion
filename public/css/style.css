@@ -1,3 +1,8 @@
+/* Konten utama agar tidak tertutup navbar */
+.main-content {
+    margin-top:200px;
+    
+}
 body{
     background-color: rgb(138, 138, 138);
 }

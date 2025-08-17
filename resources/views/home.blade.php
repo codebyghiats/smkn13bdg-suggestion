@@ -17,6 +17,7 @@
     />
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -30,6 +31,10 @@
             </div>
         </div>
     </nav>
-    <h2>Hello World!</h2>
+    <!-- End Navbar -->
+    <div class="main-content">
+        <h2>Hello</h2>
+    </div>
+
 </body>
 </html>
