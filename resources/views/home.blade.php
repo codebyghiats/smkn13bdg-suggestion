@@ -22,18 +22,32 @@
         <div class="navbar-container">
             <div class="navbar-logo">
                 <!-- Tempat logo -->
-                <img src="img/Analis_Bdg.jpg" alt="Logo" style="height:64px;" />
+                <img src="img/SMKN13BANDUNG.png" alt="Logo" style="height:64px;" />
             </div>
             <div class="navbar-menu">
                 <a href="/">Home</a>
                 <a href="/about">About</a>
-                <a href="/contact">Contact</a>
+                <a href="/contact">Contac</a>
             </div>
         </div>
     </nav>
     <!-- End Navbar -->
-    <div class="main-content">
-        <h2>Hello</h2>
+    <div class="main-content home-hero">
+        <div class="hero-overlay">
+            <div class="hero-header">
+                <div class="hero-logo">
+                    <img src="img/Sekolah.jpg" alt="Logo" style="height:64px;" />
+                </div>
+                <div class="hero-title-group">
+                    <h3 class="hero-title">WEBSITE PIKET<br>SMKN 13 BANDUNG</h3>
+                </div>
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-welcome">Selamat Datang</h1>
+                <p class="hero-sub">Di Website Piket SMKN 13 Bandung</p>
+                <a href="#" class="hero-btn">Masuk &rarr;</a>
+            </div>
+        </div>
     </div>
 
 </body>
