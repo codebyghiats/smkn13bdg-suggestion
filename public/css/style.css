@@ -7,6 +7,18 @@ html, body {
     background-color: #FDFBEE;
     height: 100%; 
 }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ====== NAVBAR ====== */
+.Navbar {
+    background-color: #7A1C1C;
+    color: white;
+    padding: 10px;
     margin: 0;
     position: fixed;
     top: 0;
