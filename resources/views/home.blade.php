@@ -15,7 +15,7 @@
         type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
     />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>EduPiket13</title>
 </head>
 <body>
@@ -24,7 +24,7 @@
         <div class = "navbar-container">
             <div class = "navbar-logo">
                 <!-- Tempat logo -->
-                <img src="img/LogoWebsite.png" alt="Logo" style="height:40px;" class = "navbar-logo"/>
+                <img src="img/LogoPutih.png" alt="Logo" style="height:40px;" class = "navbar-logo"/>
             </div>
         </div>
     </nav>
@@ -33,7 +33,9 @@
     <div class="text-section">
     <h1>Selamat Datang</h1>
     <p>Di Website Piket SMKN 13 Bandung</p>
+    <form action="dashboard">
     <button class="btn">Masuk →</button>
+    </form>
     </div>
 
     <div class="image-section">
@@ -44,13 +46,16 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="footer-container">
+    <!-- Kiri: Logo -->
     <div class="footer-left">
-        <img src="img/SMKN13BANDUNG.png" alt="Logo SMKN 13 Bandung" class="footer-logo">
+        <img src="img/SMKN13BANDUNG.png" alt="SMKN 13 Bandung" class="footer-logo">
     </div>
-    <div class="footer-center">
+
+    <!-- Kanan: Teks + Sosmed -->
+    <div class="footer-right">
         <h3>SMKN 13 Bandung</h3>
         <p>
-        Jl. Soekarno-Hatta No.KM. 10, Jatisari, Kec. Buahbatu,<br>
+        Jl. Soekarno-Hatta No.KM. 10, Jatisari, Kec. Buahbatu, <br>
         Kota Bandung, Jawa Barat 40286
         </p>
         <div class="footer-social">
@@ -60,10 +65,13 @@
         </div>
     </div>
     </div>
+
+    <!-- Copyright -->
     <div class="footer-bottom">
-    <p>© 2025 SMKN 13 Bandung. All rights reserved</p>
+    <p>© 2025 SMKN 13 Bandung. All rights reserved</p>  
     </div>
 </footer>
+
 <!-- End Footer -->
 
 </body>
