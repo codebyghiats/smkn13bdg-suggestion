@@ -27,7 +27,7 @@
             <img src="img/LogoMerah.png" alt="Logo" width="200">
         </div>
         <nav>
-            <a href="/"><i class="ph ph-house"></i> Home</a>
+            <a href="dashboard"><i class="ph ph-house"></i> Home</a>
             <a href="siswa"><i class="ph ph-user"></i> Form Siswa</a>
             <a href="guru"><i class="ph ph-users"></i> Kehadiran Guru</a>
             <a href="pengumuman"><i class="ph ph-megaphone"></i> Pengumuman</a>

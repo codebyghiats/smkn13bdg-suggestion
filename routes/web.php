@@ -15,7 +15,7 @@ Route::get('guru', function () {
     return view('guru');
 });
 Route::get('pengumuman', function () {
-    return view('pengumunman');
+    return view('pengumuman');
 });
 Route::get('arsip', function () {
     return view('arsip');
