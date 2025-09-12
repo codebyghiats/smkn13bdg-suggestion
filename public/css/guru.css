@@ -1,0 +1,207 @@
+/* ====== GLOBAL ====== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #7a1c1c;
+    margin: 0;
+    padding: 35px;
+}
+
+/* ====== LAYOUT ====== */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ====== SIDEBAR ====== */
+.sidebar {
+    width: 250px;
+    background-color: #FDFBEE;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-right: 4px solid rgb(122, 122, 115, 60%);
+}
+
+.sidebar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.sidebar nav a {
+    display: block;
+    color: #8b8000;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: 0.3s;
+    font-size: 20px;
+    margin-left: 15px;
+    margin-top: 35px;
+}
+
+.sidebar nav a:hover {
+    color: #7a1c1c;
+}
+
+.sidebar .logout {
+    color: #8b8000;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 15px;
+    margin-bottom: 35px;
+    transition: 0.3s;
+}
+
+.sidebar .logout a:hover {
+    color: #7a1c1c ;
+}
+
+/* ====== MAIN CONTENT ====== */
+.main {
+    flex: 1;
+    background-color: #FDFBEE;
+    padding: 30px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* Header */
+.header {
+    background-color: #FDFBEE;
+    color: #7A7A73;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    border-bottom: 2px solid #ddd;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #7A7A73;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #E1B949;
+    padding: 8px 12px;
+    border-radius: 20px;
+    width: 200px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.search-bar input::placeholder {
+    color: white;
+}
+
+.search-bar i {
+    color: white;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile span {
+    background-color: #E1B949;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.profile p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.profile b {
+    color: #7A7A73;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #000000;
+}
+
+th {
+    background-color: #FDFBEE;
+    color: black;
+}
+
+tr:nth-child(even) {
+    background-color: #FDFBEE;
+}
+
+h3{
+    color: #7A7A73;
+}
+
+/* Button */
+.btn-add {
+    background-color: #E1B949; /* Kuning */
+    color: #ffffff; /* Teks hitam */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-add i {
+    background-color: #7a1c1c; /* Merah marun */
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.btn-add:hover {
+    background-color: #7a1c1c;
+}

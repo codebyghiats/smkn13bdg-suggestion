@@ -41,17 +41,20 @@
     <!-- Main Content -->
     <main class="main">
         <header class="header">
-        <h2>Dashboard</h2>
-        <div class="right-header">
-            <input type="text" placeholder="Cari Disini">
-            <div class="profile">
-            <span>👤</span>
-            <div>
-                <p><b>Ghiats Abdurahman R</b></p>
-                <p>ghiatsabdurahman@gmail.com</p>
+            <div class="header-content">
+                <h2>Dashboard</h2>
+                    <div class="search-bar">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" placeholder="Cari Disini">
+                        </div>
+                        <div class="profile">
+                        <span><i class="ph ph-user"></i></span>
+                        <div>
+                        <p><b>Ghiats Abdurahman R</b></p>
+                        <p>ghiatsabdurahman@gmail.com</p>
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
         </header>
 
         <!-- Cards -->

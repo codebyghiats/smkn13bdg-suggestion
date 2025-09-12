@@ -41,12 +41,15 @@
     <!-- Main Content -->
     <main class="main">
         <header class="header">
-            <h2>Form Siswa</h2>
-            <div class="right-header">
-                <input type="text" placeholder="Cari Disini" class="search-bar">
-                <div class="profile">
-                    <span>👤</span>
-                    <div>
+            <div class="header-content">
+                <h2>Form Siswa</h2>
+                    <div class="search-bar">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" placeholder="Cari Disini">
+                        </div>
+                        <div class="profile">
+                        <span><i class="ph ph-user"></i></span>
+                        <div>
                         <p><b>Ghiats Abdurahman R</b></p>
                         <p>ghiatsabdurahman@gmail.com</p>
                     </div>
@@ -59,14 +62,14 @@
             <div class="form-card">
                 <h3>Formulir Izin Siswa</h3>
                 <form action="#" method="POST">
-                    <input type="text" placeholder="Masukkan Nama" required>
-                    <input type="text" placeholder="Masukkan Kelas" required>
-                    <input type="text" placeholder="Masukkan Alasan" required>
-                        <div style="display: flex; gap: 144px; align-items: center;">
-                            <button type="submit" class="btn-submit">Submit</button>
-                            <a href="#" class="export-link">Export ke Excel/PDF</a>
-                        </div>
-                </form>
+    <input type="text" placeholder="Masukkan Nama" required>
+    <input type="text" placeholder="Masukkan Kelas" required>
+    <input type="text" placeholder="Masukkan Alasan" required>
+    <div style="display: flex; gap: 132px; align-items: center; margin-top: 10px;">
+        <button type="submit" class="btn-submit">Submit</button>
+        <a href="#" class="export-link">Export ke Excel/PDF</a>
+    </div>
+</form>
             </div>
 
             <div class="dashboard-card">
