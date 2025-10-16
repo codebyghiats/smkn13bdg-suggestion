@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nip',
+        'role',
     ];
 
     /**
@@ -34,7 +35,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -44,5 +45,29 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if user role is guru
+     */
+    public function isGuru(): bool
+    {
+        return $this->role === 'guru';
+    }
+
+    /**
+     * Check if user role is satpam
+     */
+    public function isSatpam(): bool
+    {
+        return $this->role === 'satpam';
+    }
+
+    /**
+     * Relation: one user can have many surat izins
+     */
+    public function suratIzins()
+    {
+        return $this->hasMany(\App\Models\SuratIzin::class, 'created_by');
     }
 }

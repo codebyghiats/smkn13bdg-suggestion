@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduPiket Dashboard</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet">
-        <link
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet">
+    <link
         rel="stylesheet"
         type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
@@ -15,7 +15,7 @@
         type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
     />
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
 <body>
     <div class="wrapper">
@@ -24,48 +24,60 @@
     <aside class="sidebar">
         <div>
         <div class="logo">
-            <img src="img/LogoMerah.png" alt="Logo" width="200">
+            <img src="{{ asset('img/LogoMerah.png') }}" alt="Logo" width="200">
         </div>
         <nav>
-            <a href="/"><i class="ph ph-house"></i> Home</a>
-            <a href="siswa"><i class="ph ph-user"></i> Form Siswa</a>
-            <a href="guru"><i class="ph ph-users"></i> Kehadiran Guru</a>
-            <a href="pengumuman"><i class="ph ph-megaphone"></i> Pengumuman</a>
-            <a href="arsip"><i class="ph ph-archive"></i> Arsip</a>
-            <a href="piket"><i class="ph ph-calendar"></i> Shift Piket</a>
+            <a href="{{ route('dashboard') }}"><i class="ph ph-house"></i> Home</a>
+            @if(Auth::user()->isGuru())
+            <a href="{{ route('kehadiran.index') }}"><i class="ph ph-user"></i> Form Siswa</a>
+            <a href="{{ route('kehadiran.index') }}"><i class="ph ph-users"></i> Kehadiran Guru</a>
+            @else
+            <a href="#" class="text-gray-500 cursor-not-allowed"><i class="ph ph-user"></i> Form Siswa (Hanya Guru)</a>
+            <a href="#" class="text-gray-500 cursor-not-allowed"><i class="ph ph-users"></i> Kehadiran Guru (Hanya Guru)</a>
+            @endif
+            <a href="#"><i class="ph ph-megaphone"></i> Pengumuman</a>
+            <a href="#"><i class="ph ph-archive"></i> Arsip</a>
+            <a href="#"><i class="ph ph-calendar"></i> Shift Piket</a>
         </nav>
         </div>
-        <a href="/" class="logout"><i class="ph ph-sign-out"></i> Logout</a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout"><i class="ph ph-sign-out"></i> Logout</button>
+        </form>
     </aside>
 
     <!-- Main Content -->
     <main class="main">
         <header class="header">
-        <h2>Dashboard</h2>
-        <div class="right-header">
-            <input type="text" placeholder="Cari Disini">
-            <div class="profile">
-            <span>👤</span>
-            <div>
-                <p><b>Ghiats Abdurahman R</b></p>
-                <p>ghiatsabdurahman@gmail.com</p>
+            <div class="header-content">
+                <h2>Dashboard</h2>
+                    <div class="search-bar">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" placeholder="Cari Disini">
+                        </div>
+                        <div class="profile">
+                        <span><i class="ph ph-user"></i></span>
+                        <div>
+                        <p><b>{{ Auth::user()->name }}</b></p>
+                        <p>{{ Auth::user()->email }}</p>
+                        <p style="font-size: 0.8rem; color: #666;">Role: {{ ucfirst(Auth::user()->role) }}{{ Auth::user()->nip ? ' (NIP: ' . Auth::user()->nip . ')' : '' }}</p>
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
         </header>
 
         <!-- Cards -->
         <div class="cards">
         <div class="card green">
-            <p class="number">15</p>
+            <p class="number">{{ $siswaTidakHadir }}</p>
             <p>Siswa Tidak Hadir</p>
         </div>
         <div class="card blue">
-            <p class="number">25</p>
+            <p class="number">{{ $guruHadir }}</p>
             <p>Guru Hadir</p>
         </div>
         <div class="card red">
-            <p class="number">5</p>
+            <p class="number">{{ $guruTidakHadir }}</p>
             <p>Guru Tidak Hadir</p>
         </div>
         </div>
@@ -74,9 +86,15 @@
         <section class="announcement">
         <h3>Pengumuman Terbaru</h3>
         <div class="box">
-            <p><b>Kehilangan Barang</b></p>
-            <p>Seorang siswa kehilangan dompet di Perpustakaan sekolah. Mohon untuk menghubungi guru piket jika menemukannya.</p>
-            <p class="date">Dibuat : 18 Agustus 2025</p>
+            @if($pengumumanTerbaru)
+                <p><b>{{ $pengumumanTerbaru->judul }}</b></p>
+                <p>{{ $pengumumanTerbaru->isi }}</p>
+                <p class="date">Dibuat : {{ $pengumumanTerbaru->created_at->format('d F Y') }}</p>
+            @else
+                <p><b>Tidak ada pengumuman</b></p>
+                <p>Belum ada pengumuman untuk hari ini.</p>
+                <p class="date">-</p>
+            @endif
         </div>
         </section>
 
@@ -94,20 +112,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Andi</td>
-                <td>XI RPL 2</td>
-                <td>Keluar</td>
-                <td>Lomba</td>
-                <td>10:15</td>
-            </tr>
-            <tr>
-                <td>Uya</td>
-                <td>XI KA 1</td>
-                <td>Keluar</td>
-                <td>Acara Keluarga</td>
-                <td>12:45</td>
-            </tr>
+            @if($siswaIzin->count() > 0)
+                @foreach($siswaIzin as $siswa)
+                <tr>
+                    <td>{{ $siswa->nama }}</td>
+                    <td>{{ $siswa->kelas }}</td>
+                    <td>{{ ucfirst(str_replace('_', ' ', $siswa->status)) }}</td>
+                    <td>{{ $siswa->alasan ?? '-' }}</td>
+                    <td>{{ $siswa->waktu_masuk ? $siswa->waktu_masuk->format('H:i') : '-' }}</td>
+                </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                        Tidak ada siswa yang izin hari ini
+                    </td>
+                </tr>
+            @endif
             </tbody>
         </table>
         </section>
