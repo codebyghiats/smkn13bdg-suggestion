@@ -5,23 +5,37 @@ use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+// Halaman utama
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // Routes untuk guru (hanya guru yang bisa akses)
-    Route::middleware('role.guru')->group(function () {
-        Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
-        Route::post('/kehadiran/siswa', [KehadiranController::class, 'storeSiswa'])->name('kehadiran.siswa.store');
-        Route::post('/kehadiran/guru', [KehadiranController::class, 'storeGuru'])->name('kehadiran.guru.store');
-    });
+// Dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard');
 });
 
-require __DIR__.'/auth.php';
+// Form siswa
+Route::get('/siswa', function () {
+    return view('siswa');
+});
+
+// Kehadiran guru
+Route::get('/guru', function () {
+    return view('guru');
+});
+
+// Pengumuman (ini sebelumnya typo "pengumunman")
+Route::get('/pengumuman', function () {
+    return view('pengumuman');
+});
+
+// Arsip
+Route::get('/arsip', function () {
+    return view('arsip');
+});
+
+// Shift piket
+Route::get('/piket', function () {
+    return view('piket');
+});
