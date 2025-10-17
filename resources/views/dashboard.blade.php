@@ -16,6 +16,7 @@
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
     />
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/logout-modal.css">
 </head>
 <body>
     <div class="wrapper">
@@ -35,7 +36,7 @@
             <a href="piket"><i class="ph ph-calendar"></i> Shift Piket</a>
         </nav>
         </div>
-        <a href="/" class="logout"><i class="ph ph-sign-out"></i> Logout</a>
+        <a href="#" class="logout logout-link"><i class="ph ph-sign-out"></i> Logout</a>
     </aside>
 
     <!-- Main Content -->
@@ -113,5 +114,11 @@
         </section>
     </main>
     </div>
+
+    <!-- Include Logout Modal -->
+    @include('partials.logout-modal')
+
+    <!-- Include JavaScript -->
+    <script src="js/logout-modal.js"></script>
 </body>
 </html>
