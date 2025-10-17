@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduPiket Dashboard</title>
+    <title>Kehadiran - EduPiket</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet">
     <link
         rel="stylesheet"
@@ -58,7 +58,7 @@
     <main class="main">
         <header class="header">
             <div class="header-content">
-                <h2>Dashboard</h2>
+                <h2>Kehadiran</h2>
                     <div class="search-bar">
                         <i class="ph ph-magnifying-glass"></i>
                         <input type="text" placeholder="Cari Disini">
@@ -73,69 +73,13 @@
             </div>
         </header>
 
-        <!-- Cards -->
-        <div class="cards">
-        <div class="card green">
-            <p class="number">{{ $siswaTidakHadir ?? 0 }}</p>
-            <p>Siswa Tidak Hadir</p>
-        </div>
-        <div class="card blue">
-            <p class="number">{{ $guruHadir ?? 0 }}</p>
-            <p>Guru Hadir</p>
-        </div>
-        <div class="card red">
-            <p class="number">{{ $guruTidakHadir ?? 0 }}</p>
-            <p>Guru Tidak Hadir</p>
-        </div>
-        </div>
-
-        <!-- Announcement -->
-        <section class="announcement">
-        <h3>Pengumuman Terbaru</h3>
-        @if(isset($pengumumanTerbaru) && $pengumumanTerbaru)
-        <div class="box">
-            <p><b>{{ $pengumumanTerbaru->judul }}</b></p>
-            <p>{{ $pengumumanTerbaru->isi }}</p>
-            <p class="date">Dibuat : {{ $pengumumanTerbaru->created_at->format('d F Y') }}</p>
-        </div>
-        @else
-        <div class="box">
-            <p>Tidak ada pengumuman terbaru</p>
-        </div>
-        @endif
-        </section>
-
-        <!-- Table -->
+        <!-- Content -->
         <section>
-        <h3>Daftar Siswa Izin Hari ini</h3>
-        @if(isset($siswaIzinHariIni) && $siswaIzinHariIni && $siswaIzinHariIni->count() > 0)
-        <table>
-            <thead>
-            <tr>
-                <th>Nama</th>
-                <th>Kelas</th>
-                <th>Jenis Izin</th>
-                <th>Alasan</th>
-                <th>Waktu</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($siswaIzinHariIni as $izin)
-            <tr>
-                <td>{{ $izin->nama_siswa }}</td>
-                <td>{{ $izin->kelas ?? '-' }}</td>
-                <td>Keluar</td>
-                <td>{{ $izin->keperluan }}</td>
-                <td>{{ $izin->created_at->format('H:i') }}</td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-        @else
-        <div class="box">
-            <p>Tidak ada siswa yang izin hari ini</p>
-        </div>
-        @endif
+            <h3>Data Kehadiran Hari Ini</h3>
+            <div class="box">
+                <p>Halaman kehadiran akan segera tersedia.</p>
+                <p>Tanggal: {{ now()->format('d F Y') }}</p>
+            </div>
         </section>
     </main>
     </div>

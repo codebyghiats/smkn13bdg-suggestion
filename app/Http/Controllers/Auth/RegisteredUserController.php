@@ -10,6 +10,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -30,12 +32,29 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        Log::info('Register: incoming request', [
+            'email' => $request->input('email'),
+            'role' => $request->input('role'),
+        ]);
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'role' => ['required', 'in:guru,satpam'],
-            'nip' => ['required_if:role,guru', 'string', 'max:20', 'unique:users,nip'],
+            // Only validate NIP when role is guru; ignore otherwise
+            'nip' => ['exclude_unless:role,guru', 'required', 'string', 'max:20', 'unique:users,nip'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        if ($validator->fails()) {
+            Log::warning('Register: validation failed', [
+                'errors' => $validator->errors()->toArray(),
+            ]);
+            return back()->withErrors($validator)->withInput();
+        }
+
+        Log::info('Register: validation passed', [
+            'email' => $request->input('email'),
+            'role' => $request->input('role'),
         ]);
 
         $userData = [
@@ -51,10 +70,12 @@ class RegisteredUserController extends Controller
         }
 
         $user = User::create($userData);
+        Log::info('Register: user created', ['user_id' => $user->id]);
 
         event(new Registered($user));
 
         Auth::login($user);
+        Log::info('Register: user logged in', ['user_id' => $user->id]);
 
         // Simpan informasi register activity
         LoginActivity::create([
@@ -65,6 +86,8 @@ class RegisteredUserController extends Controller
             'login_at' => now(),
         ]);
 
-        return redirect(route('dashboard', absolute: false));
+		// Selalu arahkan ke dashboard setelah registrasi
+        Log::info('Register: redirecting to /dashboard', ['user_id' => $user->id]);
+        return redirect('/dashboard');
     }
 }

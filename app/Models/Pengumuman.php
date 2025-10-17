@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pengumuman extends Model
 {
+    use HasFactory;
+
     protected $table = 'pengumuman';
     
     protected $fillable = [
@@ -13,7 +16,7 @@ class Pengumuman extends Model
         'isi',
         'status',
         'tanggal_mulai',
-        'tanggal_selesai',
+        'tanggal_selesai'
     ];
 
     protected $casts = [

@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KehadiranController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\ArsipController;
+use App\Http\Controllers\PiketController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,9 +14,7 @@ Route::get('/', function () {
 });
 
 // Dashboard
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Form siswa
 Route::get('/siswa', function () {
@@ -25,17 +26,17 @@ Route::get('/guru', function () {
     return view('guru');
 });
 
-// Pengumuman (ini sebelumnya typo "pengumunman")
-Route::get('/pengumuman', function () {
-    return view('pengumuman');
-});
+// Pengumuman
+Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman');
 
 // Arsip
-Route::get('/arsip', function () {
-    return view('arsip');
-});
+Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip');
 
 // Shift piket
-Route::get('/piket', function () {
-    return view('piket');
-});
+Route::get('/piket', [PiketController::class, 'index'])->name('piket');
+
+// Kehadiran routes
+Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
+
+// Auth routes (login, register, password reset, etc.)
+require __DIR__.'/auth.php';

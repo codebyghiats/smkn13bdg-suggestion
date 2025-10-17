@@ -67,24 +67,28 @@
             </x-primary-button>
         </div>
     </form>
-    <script>
-        function toggleNipField() {
-            var role = document.getElementById('role').value;
-            var nipField = document.getElementById('nip-field');
-            if (role === 'guru') {
-                nipField.style.display = 'block';
-            }
-            else if ('satpam') {
-                nipField.style.display = 'block';
-            }else {
-                nipField.style.display = 'none'
-            }
-        }
-        document.getElementById('role').addEventListener('change', toggleNipField);
-        window.addEventListener('DOMContentLoaded', function() {
-            toggleNipField();
-        });
-    </script>
+	<script>
+		function toggleNipField() {
+			const roleSelect = document.getElementById('role');
+			const nipField = document.getElementById('nip-field');
+			const nipInput = document.getElementById('nip');
+
+			if (roleSelect.value === 'guru') {
+				nipField.style.display = 'block';
+				nipInput.required = true;
+			} else {
+				nipField.style.display = 'none';
+				nipInput.required = false;
+				nipInput.value = '';
+			}
+		}
+
+		// Initialize and bind change handler
+		window.addEventListener('DOMContentLoaded', function() {
+			document.getElementById('role').addEventListener('change', toggleNipField);
+			toggleNipField();
+		});
+	</script>
 
     <!-- Login Link -->
     <div class="mt-6 text-center">
@@ -96,25 +100,10 @@
         </p>
     </div>
 
-    <script>
-        function toggleNipField() {
-            const roleSelect = document.getElementById('role');
-            const nipField = document.getElementById('nip-field');
-            const nipInput = document.getElementById('nip');
-            
-            if (roleSelect.value === 'guru') {
-                nipField.style.display = 'block';
-                nipInput.required = true;
-            } else {
-                nipField.style.display = 'none';
-                nipInput.required = false;
-                nipInput.value = '';
-            }
-        }
-        
-        // Check on page load if role is already selected
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleNipField();
-        });
-    </script>
+	<script>
+		// Keep only one implementation; ensure state is correct after other content
+		document.addEventListener('DOMContentLoaded', function() {
+			toggleNipField();
+		});
+	</script>
 </x-guest-layout>

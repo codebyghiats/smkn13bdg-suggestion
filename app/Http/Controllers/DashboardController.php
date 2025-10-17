@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KehadiranSiswa;
-use App\Models\KehadiranGuru;
-use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,42 +11,65 @@ class DashboardController extends Controller
     {
         $today = now()->toDateString();
         
-        // Statistik kehadiran siswa hari ini
-        $siswaTidakHadir = KehadiranSiswa::where('tanggal', $today)
-            ->where('status', 'tidak_hadir')
-            ->count();
-            
-        // Statistik kehadiran guru hari ini
-        $guruHadir = KehadiranGuru::where('tanggal', $today)
-            ->where('status', 'hadir')
-            ->count();
-            
-        $guruTidakHadir = KehadiranGuru::where('tanggal', $today)
-            ->where('status', 'tidak_hadir')
-            ->count();
+        // Initialize variables with default values
+        $siswaTidakHadir = 0;
+        $guruHadir = 0;
+        $guruTidakHadir = 0;
+        $pengumumanTerbaru = null;
+        $siswaIzinHariIni = collect();
         
-        // Pengumuman terbaru
-        $pengumumanTerbaru = Pengumuman::where('status', 'aktif')
-            ->where('tanggal_mulai', '<=', $today)
-            ->where(function($query) use ($today) {
-                $query->whereNull('tanggal_selesai')
-                      ->orWhere('tanggal_selesai', '>=', $today);
-            })
-            ->orderBy('created_at', 'desc')
-            ->first();
-        
-        // Daftar siswa izin hari ini
-        $siswaIzin = KehadiranSiswa::where('tanggal', $today)
-            ->whereIn('status', ['izin', 'sakit'])
-            ->orderBy('waktu_masuk', 'asc')
-            ->get();
+        try {
+            // Check if tables exist before querying
+            if (DB::getSchemaBuilder()->hasTable('kehadiran_siswa')) {
+                $siswaTidakHadir = DB::table('kehadiran_siswa')
+                    ->where('tanggal', $today)
+                    ->where('status', 'tidak_hadir')
+                    ->count();
+            }
+            
+            if (DB::getSchemaBuilder()->hasTable('kehadiran_guru')) {
+                $guruHadir = DB::table('kehadiran_guru')
+                    ->where('tanggal', $today)
+                    ->where('status', 'hadir')
+                    ->count();
+                    
+                $guruTidakHadir = DB::table('kehadiran_guru')
+                    ->where('tanggal', $today)
+                    ->where('status', 'tidak_hadir')
+                    ->count();
+            }
+            
+            if (DB::getSchemaBuilder()->hasTable('pengumuman')) {
+                $pengumumanTerbaru = DB::table('pengumuman')
+                    ->where('status', 'aktif')
+                    ->where('tanggal_mulai', '<=', $today)
+                    ->where(function($query) use ($today) {
+                        $query->whereNull('tanggal_selesai')
+                              ->orWhere('tanggal_selesai', '>=', $today);
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
+            
+            if (DB::getSchemaBuilder()->hasTable('surat_izins')) {
+                $siswaIzinHariIni = DB::table('surat_izins')
+                    ->where('tanggal_izin', $today)
+                    ->where('status', 'approved')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(10)
+                    ->get();
+            }
+                
+        } catch (\Exception $e) {
+            // Keep default values if any error occurs
+        }
         
         return view('dashboard', compact(
             'siswaTidakHadir',
             'guruHadir', 
             'guruTidakHadir',
             'pengumumanTerbaru',
-            'siswaIzin'
+            'siswaIzinHariIni'
         ));
     }
 }

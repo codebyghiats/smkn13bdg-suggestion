@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KehadiranSiswa extends Model
 {
+    use HasFactory;
+
     protected $table = 'kehadiran_siswa';
     
     protected $fillable = [
@@ -15,12 +18,12 @@ class KehadiranSiswa extends Model
         'alasan',
         'tanggal',
         'waktu_masuk',
-        'waktu_keluar',
+        'waktu_keluar'
     ];
 
     protected $casts = [
         'tanggal' => 'date',
-        'waktu_masuk' => 'datetime:H:i',
-        'waktu_keluar' => 'datetime:H:i',
+        'waktu_masuk' => 'datetime',
+        'waktu_keluar' => 'datetime',
     ];
 }
