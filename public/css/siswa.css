@@ -1,7 +1,7 @@
 /* ====== GLOBAL ====== */
 body {
     font-family: Arial, sans-serif;
-    background-color: #6a1b1b;
+    background-color: #7a1c1c;
     margin: 0;
     padding: 35px;
 }
@@ -15,13 +15,14 @@ body {
 /* ====== SIDEBAR ====== */
 .sidebar {
     width: 250px;
-    background-color: #f7f3e9;
+    background-color: #FDFBEE;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    border-right: 4px solid rgb(122, 122, 115, 60%);
 }
 
 .sidebar .logo {
@@ -43,7 +44,7 @@ body {
 }
 
 .sidebar nav a:hover {
-    color: #8b0000;
+    color: #7a1c1c;
 }
 
 .sidebar .logout {
@@ -56,53 +57,95 @@ body {
 }
 
 .sidebar .logout a:hover {
-    color: #8b0000 ;
+    color: #7a1c1c ;
 }
 
 /* ====== MAIN CONTENT ====== */
 .main {
     flex: 1;
-    background-color: #fdfbf7;
+    background-color: #FDFBEE;
     padding: 30px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
+/* Header */
 .header {
+    background-color: #FDFBEE;
+    color: #7A7A73;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    border-bottom: 2px solid #ddd;
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    width: 100%;
 }
 
-.header input {
-    border: 1px solid #ddd;
-    padding: 8px 12px;
-    border-radius: 8px;
-    outline: none;
+.header h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #7A7A73;
 }
 
-.right-header {
+.search-bar {
     display: flex;
     align-items: center;
-    gap: 15px;
-    
+    gap: 8px;
+    background-color: #E1B949;
+    padding: 8px 12px;
+    border-radius: 20px;
+    width: 200px;
 }
 
-.header .profile {
-    background: #fff;
-    padding: 8px 16px;
-    border-radius: 12px;
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.search-bar input::placeholder {
+    color: white;
+}
+
+.search-bar i {
+    color: white;
+}
+
+.profile {
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.header .profile p {
+.profile span {
+    background-color: #E1B949;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.profile p {
+    font-size: 0.9rem;
     margin: 0;
-    font-size: 13px;
-    color: #333;
+}
+
+.profile b {
+    color: #7A7A73;
 }
 
 /* ====== FORM SECTION ====== */
@@ -113,7 +156,7 @@ body {
 }
 
 .form-card {
-    background-color: #6a1b1b;
+    background-color: #7a1c1c;
     color: white;
     padding: 20px;
     border-radius: 10px;
@@ -145,25 +188,27 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .btn-submit:hover {
-    background-color: #e0d8c0;
+    background-color: #431010;
 }
 
 .export-link {
     color: #f7f3e9;
     text-decoration: none;
     font-size: 0.9rem;
+
 }
 
 .export-link:hover {
     text-decoration: underline;
+    color: #E1B949;
 }
 
 .dashboard-card {
-    background-color: #6a1b1b;
+    background-color: #7a1c1c;
     color: white;
     padding: 20px;
     border-radius: 10px;
@@ -210,6 +255,25 @@ body {
 
 .riwayat-card,
 .daftar-izin-card {
+    /* Gaya untuk sel tabel */
+    td {
+        padding: 10px;
+        color: white;
+        border-bottom: 1px solid #ccc;
+        white-space: nowrap; /* Mencegah pemecahan baris */
+    }
+
+    /* Atur lebar kolom secara manual (opsional) */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: 100px; /* Agar lebar kolom tetap */
+    }
+
+    th,
+    td {
+        text-align: left;
+    }
     background-color: #e1b949;
     color: #000000;
     padding: 20px;
@@ -239,7 +303,7 @@ table td {
 }
 
 table thead th {
-    background-color: #6a1b1b;
+    background-color: #7a1c1c;
     color: white;
 }
 

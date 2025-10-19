@@ -1,84 +1,151 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\SuratIzin;
 use App\Models\User;
 use App\Notifications\NewSuratIzinNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class SuratIzinController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        if ($user->isGuru()) {
-            $surats = SuratIzin::where('created_by', $user->id)->latest()->get();
-        } elseif ($user->isSatpam()) {
-            $surats = SuratIzin::where('status','pending')->latest()->get();
-        } else {
-            abort(403);
+        $today = now()->toDateString();
+        
+        // Initialize variables with default values
+        $totalIzinHariIni = 0;
+        $disetujui = 0;
+        $ditolak = 0;
+        $menunggu = 0;
+        $riwayatIzin = collect();
+        $izinHariIni = collect();
+        
+        try {
+            if (DB::getSchemaBuilder()->hasTable('surat_izins')) {
+                // Statistik izin hari ini
+                $totalIzinHariIni = DB::table('surat_izins')
+                    ->where('tanggal_izin', $today)
+                    ->count();
+                    
+                $disetujui = DB::table('surat_izins')
+                    ->where('tanggal_izin', $today)
+                    ->where('status', 'approved')
+                    ->count();
+                    
+                $ditolak = DB::table('surat_izins')
+                    ->where('tanggal_izin', $today)
+                    ->where('status', 'rejected')
+                    ->count();
+                    
+                $menunggu = DB::table('surat_izins')
+                    ->where('tanggal_izin', $today)
+                    ->where('status', 'pending')
+                    ->count();
+                
+                // Riwayat izin (semua data)
+                $riwayatIzin = DB::table('surat_izins')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(10)
+                    ->get();
+                
+                // Izin hari ini
+                $izinHariIni = DB::table('surat_izins')
+                    ->where('tanggal_izin', $today)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+        } catch (\Exception $e) {
+            // Keep default values if error occurs
         }
-
-        return view('surat.index', compact('surats'));
+        
+        return view('siswa', compact(
+            'totalIzinHariIni',
+            'disetujui',
+            'ditolak', 
+            'menunggu',
+            'riwayatIzin',
+            'izinHariIni'
+        ));
     }
-
-    public function create()
-    {
-        $this->authorize('create', SuratIzin::class); // optional
-        return view('surat.create');
-    }
-
+    
     public function store(Request $request)
     {
         $request->validate([
-            'nama_siswa'=>'required|string',
-            'kelas'=>'nullable|string',
-            'keperluan'=>'required|string',
-            'tanggal_izin'=>'required|date',
-            'lampiran'=>'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+            'nama_siswa' => 'required|string|max:255',
+            'kelas' => 'nullable|string|max:50',
+            'keperluan' => 'required|string|max:500',
         ]);
-
-        $data = $request->only(['nama_siswa','kelas','keperluan','tanggal_izin']);
-        $data['created_by'] = auth()->id();
-
-        if ($request->hasFile('lampiran')) {
-            $data['lampiran_path'] = $request->file('lampiran')->store('lampiran_surat','public');
+        
+        try {
+            $suratIzin = DB::table('surat_izins')->insertGetId([
+                'created_by' => auth()->id(),
+                'nama_siswa' => $request->nama_siswa,
+                'kelas' => $request->kelas,
+                'keperluan' => $request->keperluan,
+                'tanggal_izin' => now()->toDateString(),
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            
+            // Kirim notifikasi ke semua satpam
+            $satpamUsers = DB::table('users')
+                ->where('role', 'satpam')
+                ->get();
+                
+            foreach ($satpamUsers as $satpam) {
+                $user = User::find($satpam->id);
+                if ($user) {
+                    $user->notify(new NewSuratIzinNotification([
+                        'nama_siswa' => $request->nama_siswa,
+                        'kelas' => $request->kelas,
+                        'keperluan' => $request->keperluan,
+                        'tanggal_izin' => now()->toDateString(),
+                    ]));
+                }
+            }
+            
+            return redirect()->back()->with('success', 'Surat izin berhasil diajukan!');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengajukan surat izin.');
         }
-
-        $surat = SuratIzin::create($data);
-
-        // notify all satpams
-        $satpams = User::where('role','satpam')->get();
-        foreach($satpams as $s) {
-            $s->notify(new NewSuratIzinNotification($surat));
-        }
-
-        return redirect()->route('surat.index')->with('success','Surat izin berhasil dibuat. Notifikasi dikirim ke satpam.');
     }
-
-    public function show(SuratIzin $surat)
+    
+    public function approve($id)
     {
-        return view('surat.show', compact('surat'));
-    }
-
-    public function approve(Request $request, SuratIzin $surat)
-    {
-        if ($surat->status !== 'pending') {
-            return redirect()->back()->with('error','Surat sudah diproses.');
+        try {
+            DB::table('surat_izins')
+                ->where('id', $id)
+                ->update([
+                    'status' => 'approved',
+                    'updated_at' => now()
+                ]);
+                
+            return redirect()->back()->with('success', 'Surat izin berhasil disetujui!');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyetujui surat izin.');
         }
-
-        $surat->update([
-            'status'=>'approved',
-            'approved_by'=>auth()->id(),
-            'approved_at'=>now(),
-        ]);
-
-        // mark notifications that refer to this surat as read for the satpam
-        auth()->user()->unreadNotifications->where('data.surat_id',$surat->id)->each->markAsRead();
-
-        // notify creator
-        $surat->creator->notify(new \App\Notifications\SuratApprovedNotification($surat));
-
-        return redirect()->route('surat.index')->with('success','Surat disetujui.');
+    }
+    
+    public function reject($id)
+    {
+        try {
+            DB::table('surat_izins')
+                ->where('id', $id)
+                ->update([
+                    'status' => 'rejected',
+                    'updated_at' => now()
+                ]);
+                
+            return redirect()->back()->with('success', 'Surat izin berhasil ditolak!');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menolak surat izin.');
+        }
     }
 }

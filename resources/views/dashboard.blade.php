@@ -30,7 +30,7 @@
             <a href="{{ route('dashboard') }}"><i class="ph ph-house"></i> Home</a>
             
             @if(Auth::user()->role === 'guru')
-                <a href="{{ route('kehadiran.index') }}"><i class="ph ph-user"></i> Form Siswa</a>
+                <a href="{{ route('siswa') }}"><i class="ph ph-user"></i> Form Siswa</a>
                 <a href="{{ route('kehadiran.index') }}"><i class="ph ph-users"></i> Kehadiran Guru</a>
             @else
                 <a href="#" class="text-gray-500 cursor-not-allowed">
@@ -73,6 +73,19 @@
             </div>
         </header>
 
+        <!-- Alert Messages -->
+        @if(session('success'))
+        <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+            {{ session('error') }}
+        </div>
+        @endif
+
         <!-- Cards -->
         <div class="cards">
         <div class="card green">
@@ -87,7 +100,39 @@
             <p class="number">{{ $guruTidakHadir ?? 0 }}</p>
             <p>Guru Tidak Hadir</p>
         </div>
+        <div class="card green">
+            <p class="number">{{ $disetujui ?? 0 }}</p>
+            <p>Disetujui</p>
         </div>
+        <div class="card red">
+            <p class="number">{{ $ditolak ?? 0 }}</p>
+            <p>Ditolak</p>
+        </div>
+        <div class="card orange">
+            <p class="number">{{ $menunggu ?? 0 }}</p>
+            <p>Menunggu</p>
+        </div>
+        </div>
+
+        <!-- Notifikasi untuk Satpam -->
+        @if(Auth::user()->role === 'satpam')
+        <section class="announcement">
+        <h3>Notifikasi Terbaru</h3>
+        @if(auth()->user()->unreadNotifications->count() > 0)
+            @foreach(auth()->user()->unreadNotifications->take(3) as $notification)
+            <div class="box" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                <p><b>{{ $notification->data['title'] ?? 'Notifikasi' }}</b></p>
+                <p>{{ $notification->data['message'] ?? 'Ada notifikasi baru' }}</p>
+                <p class="date">{{ $notification->created_at->format('d F Y H:i') }}</p>
+            </div>
+            @endforeach
+        @else
+        <div class="box">
+            <p>Tidak ada notifikasi baru</p>
+        </div>
+        @endif
+        </section>
+        @endif
 
         <!-- Announcement -->
         <section class="announcement">
@@ -96,7 +141,7 @@
         <div class="box">
             <p><b>{{ $pengumumanTerbaru->judul }}</b></p>
             <p>{{ $pengumumanTerbaru->isi }}</p>
-            <p class="date">Dibuat : {{ $pengumumanTerbaru->created_at->format('d F Y') }}</p>
+            <p class="date">Dibuat : {{ \Carbon\Carbon::parse($pengumumanTerbaru->created_at)->format('d F Y') }}</p>
         </div>
         @else
         <div class="box">
@@ -105,38 +150,119 @@
         @endif
         </section>
 
-        <!-- Table -->
-        <section>
-        <h3>Daftar Siswa Izin Hari ini</h3>
-        @if(isset($siswaIzinHariIni) && $siswaIzinHariIni && $siswaIzinHariIni->count() > 0)
-        <table>
-            <thead>
-            <tr>
-                <th>Nama</th>
-                <th>Kelas</th>
-                <th>Jenis Izin</th>
-                <th>Alasan</th>
-                <th>Waktu</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($siswaIzinHariIni as $izin)
-            <tr>
-                <td>{{ $izin->nama_siswa }}</td>
-                <td>{{ $izin->kelas ?? '-' }}</td>
-                <td>Keluar</td>
-                <td>{{ $izin->keperluan }}</td>
-                <td>{{ $izin->created_at->format('H:i') }}</td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-        @else
-        <div class="box">
-            <p>Tidak ada siswa yang izin hari ini</p>
+        <!-- Student Permission Tables -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+            <!-- Daftar Izin Hari Ini -->
+            <section>
+            <h3>Daftar Izin Hari Ini</h3>
+            @if(isset($siswaIzinHariIni) && $siswaIzinHariIni && $siswaIzinHariIni->count() > 0)
+            <table>
+                <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Alasan</th>
+                    <th>Status</th>
+                    <th>Waktu</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($siswaIzinHariIni as $izin)
+                <tr>
+                    <td>{{ $izin->nama_siswa }}</td>
+                    <td>{{ $izin->kelas ?? '-' }}</td>
+                    <td>{{ $izin->keperluan }}</td>
+                    <td>
+                        @if($izin->status == 'approved')
+                            <span style="color: green;">Disetujui</span>
+                        @elseif($izin->status == 'rejected')
+                            <span style="color: red;">Ditolak</span>
+                        @else
+                            <span style="color: orange;">Menunggu</span>
+                        @endif
+                    </td>
+                    <td>{{ \Carbon\Carbon::parse($izin->created_at)->format('H:i') }}</td>
+                    <td>
+                        @if($izin->status == 'pending')
+                            <div style="display: flex; gap: 5px;">
+                                <form action="{{ route('surat-izin.approve', $izin->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                        ✓ Setujui
+                                    </button>
+                                </form>
+                                <form action="{{ route('surat-izin.reject', $izin->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                                        ✗ Tolak
+                                    </button>
+                                </form>
+                            </div>
+                        @else
+                            <span style="color: #666; font-size: 12px;">
+                                @if($izin->status == 'approved')
+                                    Sudah Disetujui
+                                @else
+                                    Sudah Ditolak
+                                @endif
+                            </span>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+            @else
+            <div class="box">
+                <p>Tidak ada izin hari ini</p>
+            </div>
+            @endif
+            </section>
+
+            <!-- Riwayat Izin Terbaru -->
+            <section>
+            <h3>Riwayat Izin Terbaru</h3>
+            @if(isset($riwayatIzin) && $riwayatIzin && $riwayatIzin->count() > 0)
+            <table>
+                <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Alasan</th>
+                    <th>Status</th>
+                    <th>Tanggal</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($riwayatIzin as $izin)
+                <tr>
+                    <td>{{ $izin->nama_siswa }}</td>
+                    <td>{{ $izin->kelas ?? '-' }}</td>
+                    <td>{{ $izin->keperluan }}</td>
+                    <td>
+                        @if($izin->status == 'approved')
+                            <span style="color: green;">Disetujui</span>
+                        @elseif($izin->status == 'rejected')
+                            <span style="color: red;">Ditolak</span>
+                        @else
+                            <span style="color: orange;">Menunggu</span>
+                        @endif
+                    </td>
+                    <td>{{ \Carbon\Carbon::parse($izin->created_at)->format('d/m/Y') }}</td>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+            @else
+            <div class="box">
+                <p>Tidak ada riwayat izin</p>
+            </div>
+            @endif
+            </section>
         </div>
-        @endif
-        </section>
     </main>
     </div>
 </body>

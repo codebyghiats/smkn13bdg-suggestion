@@ -30,7 +30,7 @@
             <a href="{{ route('dashboard') }}"><i class="ph ph-house"></i> Home</a>
             
             @if(Auth::user()->role === 'guru')
-                <a href="{{ route('kehadiran.index') }}"><i class="ph ph-user"></i> Form Siswa</a>
+                <a href="{{ route('siswa') }}"><i class="ph ph-user"></i> Form Siswa</a>
                 <a href="{{ route('kehadiran.index') }}"><i class="ph ph-users"></i> Kehadiran Guru</a>
             @else
                 <a href="#" class="text-gray-500 cursor-not-allowed">
